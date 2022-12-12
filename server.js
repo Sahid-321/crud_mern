@@ -41,6 +41,12 @@ app.get('/post', (req,res)=>{
     .catch((err)=> console.log(err))
 })
 
+app.delete("/delete/:id", (req,res)=>{
+    Post.findByIdAndDelete({_id: req.params.id})
+    .then((doc)=> console.log(doc))
+    .catch((err)=> console.log(err))
+})
+
 app.listen(PORT, ()=>{
     console.log(`server running at port ${PORT}`);
 })
