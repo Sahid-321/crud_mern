@@ -34,6 +34,13 @@ description: req.body.description
     .catch((err)=> console.log(err))
 })
 
+
+app.get('/post', (req,res)=>{
+    Post.find()
+    .then((item)=> res.json(item))
+    .catch((err)=> console.log(err))
+})
+
 app.listen(PORT, ()=>{
     console.log(`server running at port ${PORT}`);
 })
