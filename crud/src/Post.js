@@ -1,91 +1,163 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
-import { Button, Form } from "react-bootstrap";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import Modal from 'react-bootstrap/Modal';
-const Post = () => {
-//modals bootstrap
-const [show, setShow] = useState(false);
+import axios from "axios";
+import { Button, Form } from "react-bootstrap";
+import Modal from "react-bootstrap/Modal";
 
-const handleClose = () => setShow(false);
-const handleShow = () => setShow(true);
-const [saveUpdatedPost, setSaveUpdatePost] = useState({})
+function Post() {
+  const navigate = useNavigate();
+  const [posts, setPosts] = useState([]);
+  const [updatedPost, setUpdatedPost] = useState({
+    id: "",
+    title: "",
+    description: "",
+  });
+  const [show, setShow] = useState(false);
 
-    const Navigate = useNavigate()
-    const [post, setPost] = useState([])
-    useEffect(() => {
-        axios.get("/post")
-            .then((res) => {
-                console.log(res)
-                setPost(res.data)
-            })
-            .catch((err) => console.log(err))
-    }, [])
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
 
-    const deletePost = (id)=>{
-        console.log(id);
-        axios.delete(`/delete/${id}`)
-        .then((res)=> console.log(res))
-        .catch((err)=> console.log(err))
-        window.location.reload();
-    }
+  useEffect(() => {
+    axios
+      .get("/posts")
+      .then((res) => {
+        console.log(res);
+        setPosts(res.data);
+      })
+      .catch((err) => console.log(err));
+  }, []);
 
-    const updatedPost  = (post)=>{
-       setSaveUpdatePost(post)
-        handleShow();
-    }
+  const deletePost = (id) => {
+    console.log(id);
 
-    return (
-        <div style={{ width: "90%", textAlign: "center", margin: "auto auto" }}>
-            <h1>Post Page</h1>
-            <Modal show={show} onHide={handleClose}>
+    axios
+      .delete(`/delete/${id}`)
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err));
+
+    window.location.reload();
+  };
+
+  const updatePost = (id, title, description) => {
+    setUpdatedPost((prev) => {
+      return {
+        ...prev,
+        id: id,
+        title: title,
+        description: description,
+      };
+    });
+    handleShow();
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setUpdatedPost((prev) => {
+      return {
+        ...prev,
+        [name]: value,
+      };
+    });
+  };
+
+  const saveUpdatedPost = () => {
+    console.log(updatedPost);
+
+    axios
+      .put(`/update/${updatedPost.id}`, updatedPost)
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err));
+
+    handleClose();
+    window.location.reload();
+  };
+
+  return (
+    <div style={{ width: "90%", margin: "auto auto", textAlign: "center" }}>
+      <h1>Posts page</h1>
+      <Button
+        variant="outline-dark"
+        style={{ width: "100%", marginBottom: "1rem" }}
+        onClick={() => navigate(-1)}
+      >
+        BACK
+      </Button>
+      <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Update Post</Modal.Title>
+          <Modal.Title>Update a post</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-            <Form>
-                <Form.Group>
-                    <Form.Control
-                    onChange={handleChange} name="title" value={saveUpdatePost.title ? saveUpdatePost.title : ""} placeholder="update Title" />
-                    <Form.Control 
-                     onChange={handleChange} name="description" value={saveUpdatePost.description ? saveUpdatePost.description : ""} placeholder="update description" />
-                </Form.Group>
-            </Form>
+          <Form.Control
+            placeholder="title"
+            name="title"
+            value={updatedPost.title ? updatedPost.title : ""}
+            style={{ marginBottom: "1rem" }}
+            onChange={handleChange}
+          />
+          <Form.Control
+            placeholder="description"
+            name="description"
+            onChange={handleChange}
+            value={updatedPost.description ? updatedPost.description : ""}
+          />
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
             Close
           </Button>
-          <Button variant="primary" >
+          <Button variant="primary" onClick={saveUpdatedPost}>
             Save Changes
           </Button>
         </Modal.Footer>
       </Modal>
-            {post ? (
-                <> {post.map((elem) => {
-                    return (
-                        <div key={elem._id}
-                         style={{border: "solid lightgray 1px", marginBottom:"1rem", padding:"1rem"}}>
-                            <h4>
-                                {elem.title}
-                            </h4>
-                            <p>{elem.description}</p>
-                            <div style={{display:"flex", flexDirection:"row",justifyContent:"space-around"}}>
-                                <Button onClick={()=> updatedPost(post)} variant="outline-info">Update</Button>
-                                <Button
-                                onClick={()=> deletePost(elem._id)} variant="outline-danger">Delete</Button>
-                            </div>
-                        </div>
-                    )
-                })}
+      {posts ? (
+        <>
+          {posts.map((post) => {
+            return (
+              <div
+                style={{
+                  marginBottom: "1rem",
+                  border: "solid lightgray 1px",
+                  borderRadius: "8px",
+                }}
+                key={post._id}
+              >
+                <h4>{post.title}</h4>
+                <p>{post.description}</p>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "space-between",
 
-                </>
-            ) : 
-                ''
-            }
-            <Button onClick={()=> Navigate(-1)}>Back</Button>
-        </div>
-    )
+                    padding: "1rem",
+                  }}
+                >
+                  <Button
+                    variant="outline-info"
+                    onClick={() =>
+                      updatePost(post._id, post.title, post.description)
+                    }
+                    style={{ width: "100%", marginRight: "1rem" }}
+                  >
+                    UPDATE
+                  </Button>
+                  <Button
+                    onClick={() => deletePost(post._id)}
+                    variant="outline-danger"
+                    style={{ width: "100%" }}
+                  >
+                    DELETE
+                  </Button>
+                </div>
+              </div>
+            );
+          })}
+        </>
+      ) : (
+        ""
+      )}
+    </div>
+  );
 }
-
 export default Post;
