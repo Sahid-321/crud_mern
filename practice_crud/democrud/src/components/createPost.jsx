@@ -1,6 +1,10 @@
 import { Button, Form } from "react-bootstrap"
 import { useState } from "react";
+import axios from "axios"
+import { useNavigate } from "react-router-dom";
 const CreatePost = ()=>{
+const navigate = useNavigate()
+
 const[post, setPost] = useState({
     title: "",
     description:""
@@ -19,6 +23,10 @@ const handleChange = (event)=>{
 
 const handleClick = ()=>{
     console.log(post);
+    axios.post("/create",post)
+    .then((res)=>console.log(res))
+    .catch((err)=> console.log(err))
+    navigate("post");
 }
     return(
 
