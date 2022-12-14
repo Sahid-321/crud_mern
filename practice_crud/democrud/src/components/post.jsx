@@ -11,6 +11,11 @@ const Post = () => {
     const handleShow = () => setShow(true);
 
     const [post, setPost] = useState([]);
+    const [updatePost, setUpdatedPost] = useState({
+        id: "",
+        title: "",
+        description:""
+    })
 
     useEffect(() => {
         axios.get("http://localhost:8000/posts")
@@ -22,7 +27,15 @@ const Post = () => {
 
     }, [])
 
-    const handleUpdate = () => {
+    const handleUpdate = (id, title, description) => {
+setUpdatedPost((prev)=>{
+  return { ...prev,
+    id:id,
+    title:title,
+    description: description
+}
+})
+
 handleShow();
     }
 
@@ -64,7 +77,8 @@ handleShow();
                             <p>{elem.description}</p>
 
                             <div style={{ display: "flex", justifyContent: "space-between" }}>
-                                <Button onClick={handleUpdate} variant="info">Update</Button>
+                                <Button 
+                                onClick={()=>handleUpdate(post.id, post.title, post.description)} variant="info">Update</Button>
                                 <Button onClick={handleDelete} variant="danger">Delete</Button>
                             </div>
                         </div>
