@@ -58,8 +58,13 @@ handleShow();
     window.location.reload();
    }
 
-    const handleDelete = () => {
+    const handleDelete = (id) => {
+console.log(id);
+axios.delete(`http://localhost:8000/delete/${id}`)
+.then((res)=> console.log(res))
+.catch((err)=> console.log(err))
 
+window.location.reload();
     }
     const navigate = useNavigate();
     return (
@@ -102,7 +107,7 @@ handleShow();
                             <div style={{ display: "flex", justifyContent: "space-between" }}>
                                 <Button 
                                 onClick={()=>handleUpdate(elem._id, elem.title, elem.description)} variant="info">Update</Button>
-                                <Button onClick={handleDelete} variant="danger">Delete</Button>
+                                <Button onClick={()=>handleDelete(elem._id)} variant="danger">Delete</Button>
                             </div>
                         </div>
                     )
