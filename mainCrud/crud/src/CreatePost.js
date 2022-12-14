@@ -22,7 +22,7 @@ const CreatePost = ()=>{
 
     const handleClick = (event)=>{
         event.preventDefault();
-axios.post("/create", post)
+axios.post("http://localhost:8080/create", post)
 .then((res)=> console.log(res))
 .catch((err)=> console.log(err))
 

@@ -21,12 +21,12 @@ const handleChange = (event)=>{
     })
 }
 
-const handleClick = ()=>{
-    console.log(post);
-    axios.post("/create",post)
+const handleClick = (event)=>{
+    event.preventDefault();
+    axios.post("http://localhost:8000/create",post)
     .then((res)=>console.log(res))
     .catch((err)=> console.log(err))
-    navigate("post");
+   navigate("posts");
 }
     return(
 

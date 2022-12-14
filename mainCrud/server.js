@@ -7,8 +7,10 @@ const PORT = 8080;
 app.use(express.json());
 app.use(express.urlencoded({extended:false}))
 app.use(cors())
-
-mongoose.connect(`mongodb://localhost:27017/crud`)
+mongoose.set("strictQuery", false);
+mongoose.connect(`mongodb://localhost:27017/crud`,()=>{
+console.log("mongo db connected");
+})
 .catch((err)=> console.log(err))
 
 //Schema

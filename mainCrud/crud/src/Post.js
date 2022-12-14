@@ -19,7 +19,7 @@ function Post() {
 
   useEffect(() => {
     axios
-      .get("/posts")
+      .get("http://localhost:8080/posts")
       .then((res) => {
         console.log(res);
         setPosts(res.data);
@@ -31,7 +31,7 @@ function Post() {
     console.log(id);
 
     axios
-      .delete(`/delete/${id}`)
+      .delete(`http://localhost:8080/delete/${id}`)
       .then((res) => console.log(res))
       .catch((err) => console.log(err));
 
@@ -64,7 +64,7 @@ function Post() {
     console.log(updatedPost);
 
     axios
-      .put(`/update/${updatedPost.id}`, updatedPost)
+      .put(`http://localhost:8080/update/${updatedPost.id}`, updatedPost)
       .then((res) => console.log(res))
       .catch((err) => console.log(err));
 
