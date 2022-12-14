@@ -35,9 +35,28 @@ setUpdatedPost((prev)=>{
     description: description
 }
 })
+console.log(updatePost)
 
 handleShow();
     }
+   const handleChange = (e)=>{
+    const {name, value} = e.target;
+    setUpdatedPost((prev)=>{
+        return {
+            ...prev,
+            [name]:value
+        }
+    })
+   }
+
+   const saveUpdatedPost = ()=>{
+    console.log(updatePost)
+    axios.put(`http://localhost:8000/update/${updatePost.id}`, updatePost)
+    .then((res)=> console.log(res))
+    .catch((err)=> console.log(err))
+
+    window.location.reload();
+   }
 
     const handleDelete = () => {
 
@@ -55,8 +74,12 @@ handleShow();
         <Modal.Body>
             <Form>
                 <Form.Group>
-                    <Form.Control placeholder="Title" />
-                    <Form.Control placeholder="Description" />
+                    <Form.Control 
+                    onChange={handleChange} name="title"
+                    value={updatePost.title ? updatePost.title: ""} placeholder="Title" />
+                    <Form.Control 
+                    onChange={handleChange} 
+                    value={updatePost.description ? updatePost.description :""} name="description" placeholder="Description" />
                 </Form.Group>
             </Form>
         </Modal.Body>
@@ -64,7 +87,7 @@ handleShow();
           <Button variant="secondary" onClick={handleClose}>
             Close
           </Button>
-          <Button variant="primary" onClick={handleClose}>
+          <Button variant="primary" onClick={saveUpdatedPost}>
             Save Changes
           </Button>
         </Modal.Footer>
@@ -78,7 +101,7 @@ handleShow();
 
                             <div style={{ display: "flex", justifyContent: "space-between" }}>
                                 <Button 
-                                onClick={()=>handleUpdate(post.id, post.title, post.description)} variant="info">Update</Button>
+                                onClick={()=>handleUpdate(elem._id, elem.title, elem.description)} variant="info">Update</Button>
                                 <Button onClick={handleDelete} variant="danger">Delete</Button>
                             </div>
                         </div>
