@@ -42,6 +42,16 @@ app.delete('/delete/:id',(req,res)=>{
     .then((doc)=>console.log(doc))
     .then((err)=>console.log(err))
 })
+
+app.put('/put/:id',(req,res)=>{
+    Post.findByIdAndUpdate({_id:req.params.id},
+        {
+            title:req.body.title,
+            description:req.body.description
+        })
+        .then((doc)=> console.log("put working"))
+        .catch((err)=>console.log(err))
+})
 connect();
 app.listen(PORT,()=>{
     console.log(`server running at port ${PORT}`);
