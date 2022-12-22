@@ -25,7 +25,7 @@ console.log(postData);
 
 const handleClick = (event)=>{
     event.preventDefault();
-  axios.post('/post',postData)
+  axios.post('http://localhost:8000/post',postData)
   .then((res) =>console.log(res))
   .catch((err) => {
     console.log(err)
