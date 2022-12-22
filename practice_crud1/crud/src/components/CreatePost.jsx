@@ -30,6 +30,8 @@ const handleClick = (event)=>{
   .catch((err) => {
     console.log(err)
   });
+
+  navigate('/post/data')
 }
     return(
         <>

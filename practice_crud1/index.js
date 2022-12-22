@@ -21,8 +21,10 @@ const PostSchema = mongoose.Schema({
 
 const Post = mongoose.model("crudemo", PostSchema);
 
-app.get('/', (req,res)=>{
-    res.json("hello sahid")
+app.get('/get', (req,res)=>{
+   Post.find()
+   .then((data)=>res.json(data))
+   .catch((err)=> console.log(err))
 })
 app.post('/post',(req,res)=>{
     Post.create(
@@ -33,6 +35,12 @@ app.post('/post',(req,res)=>{
     )
     .then((doc)=> console.log(doc))
     .catch((err)=> console.log(err))
+})
+
+app.delete('/delete/:id',(req,res)=>{
+    Post.findByIdAndDelete({_id:req.params.id})
+    .then((doc)=>console.log(doc))
+    .then((err)=>console.log(err))
 })
 connect();
 app.listen(PORT,()=>{
